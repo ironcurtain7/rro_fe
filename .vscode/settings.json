@@ -16,5 +16,6 @@
             "command": "extension.execute",
             "priority": 4
         }
-    ]
+    ],
+    "cmake.sourceDirectory": "C:/fe/rro_fe/.pio/libdeps/esp32dev/Adafruit BusIO"
 }
