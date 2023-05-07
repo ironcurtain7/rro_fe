@@ -10,27 +10,6 @@ Adafruit_VL53L1X vl53 = Adafruit_VL53L1X(XSHUT_PIN, IRQ_PIN);
 
   
 
-
-
-
-
-
-
-  /*
-  vl.VL53L1X_SetDistanceThreshold(100, 300, 3, 1);
-  vl.VL53L1X_SetInterruptPolarity(0);
-  */
-
-
-
-
-
-
-
-
-
-
-
 int P;
 int I;
 int D;
