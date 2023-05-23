@@ -8,8 +8,8 @@ threshold_index = 0 # 0 for red, 1 for green, 2 for blue
 
 # Color Tracking Thresholds (L Min, L Max, A Min, A Max, B Min, B Max)
 # The below thresholds track in general red/green/blue things. You may wish to tune them...
-thresholds = [(0, 69, -118, -25, 7, 82)]
-thresholds1 = [(21, 69, 27, 113, -13, 127)]
+thresholds = [(0, 69, -118, -25, 7, 82)] # red
+thresholds1 = [(21, 69, 27, 113, -13, 127)] # green
 uart = UART(3, 115200)
 sensor.reset()
 sensor.set_pixformat(sensor.RGB565)
