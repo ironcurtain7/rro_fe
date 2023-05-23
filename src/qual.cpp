@@ -1,13 +1,9 @@
-// 192.168.4.1
-
+// Добавление всех необходимых библиотек //
 #include <Arduino.h>
 #include "Adafruit_VL53L0X.h"
 #include <Servo.h>
-#include <WiFi.h>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
 
-
+// Создание переменных //
 #define RXD2 16
 #define TXD2 17
 
@@ -68,18 +64,9 @@ Adafruit_VL53L0X lox2 = Adafruit_VL53L0X();
 
 Servo myservo;
 Servo servo1;
-///*  //  1111111111111111111111111111111111111111111111111111111111111111111111111111
- AsyncWebServer server(80);
 
 
-void notFound(AsyncWebServerRequest *request) {
-  request->send(404, "text/plain", "Not found");
-}
-
-//*/   // 11111111111111111111111111111111111111111111111111111111111111111111111111111
-
-
-void start(){
+void start(){  // Функция определения направления и положения ТС //
 
   servo1.write(84);
 
@@ -241,7 +228,7 @@ delay(200);
 
 
 
-void SetID() {
+void SetID() {  // Функция инициализации дальномеров //
 
 
 digitalWrite(18,LOW);
@@ -304,162 +291,6 @@ Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
   SetID();
 
 
-///*  //  22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-
-WiFi.mode(WIFI_AP);
-WiFi.softAP("ESP32AP","123321456");
-
-
-  // Send web page with input fields to client
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-
-String mess = "<!DOCTYPE HTML><html><head><title>ESP Input \
-    Form</title><meta name='viewport' content='width=device-width, initial-scale=1'></head><body><form action='/get'> \
-    kP: <input type='text' name='Kp' value='"+Kp_text+"'><br> \
-    kI: <input type='text' name='Ki' value='"+Ki_text+"'> \
-    <br>kD: <input type='text' name='Kd' value='"+Kd_text+"'>\
-    <br>speed: <input type='text' name='speed' value='"+speed_text+"'>\
-    <br>white: <input type='text' name='white' value='"+white_text+"'>\
-    <br>blue: <input type='blue' name='blue' value='"+blue_text+"'>\
-    <br>timing: <input type='timing' name='timing' value='"+timing_text+"'>\
-    <br>tim1: <input type='tim1' name='tim1' value='"+tim1_text+"'>\
-    <br>ang1: <input type='ang1' name='ang1' value='"+ang1_text+"'>\
-    <br>tim2: <input type='tim2' name='tim2' value='"+tim2_text+"'>\
-    <br>ang2: <input type='ang2' name='ang2' value='"+ang2_text+"'>\
-    <br>tim3: <input type='tim3' name='tim3' value='"+tim3_text+"'>\
-    <br>ang3: <input type='ang3' name='ang3' value='"+ang3_text+"'>\
-    <input type='submit' value='Submit'>\
-  </form>\
-</body></html>";
-    
-    request->send(200, "text/html", mess);
-
-});
-
-  // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
-  server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    String inputMessage;
-    String inputParam;
-    // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
-    if (request->hasParam("Kp")) {
-      Kp_text = request->getParam("Kp")->value();
-    }
-    // GET input2 value on <ESP_IP>/get?input2=<inputMessage>
-    if (request->hasParam("Ki")) {
-      Ki_text = request->getParam("Ki")->value();
-    }
-    // GET input3 value on <ESP_IP>/get?input3=<inputMessage>
-    if (request->hasParam("Kd")) {
-      Kd_text = request->getParam("Kd")->value();
-    }
-
-    if (request->hasParam("speed")) {
-      speed_text = request->getParam("speed")->value();
-    }
-    
-    if (request->hasParam("white")) {
-      white_text = request->getParam("white")->value();
-    }
-
-    if (request->hasParam("blue")) {
-      blue_text = request->getParam("blue")->value();
-    }
-
-    if (request->hasParam("timing")) {
-      timing_text = request->getParam("timing")->value();
-    }
-    if (request->hasParam("tim1")) {
-      tim1_text = request->getParam("tim1")->value();
-    }
-    if (request->hasParam("tim2")) {
-      tim2_text = request->getParam("tim2")->value();
-    }
-    if (request->hasParam("tim3")) {
-      tim3_text = request->getParam("tim3")->value();
-    }
-    if (request->hasParam("ang1")) {
-      ang1_text = request->getParam("ang1")->value();
-    }
-    if (request->hasParam("ang2")) {
-      ang2_text = request->getParam("ang2")->value();
-    }
-    if (request->hasParam("ang3")) {
-      ang3_text = request->getParam("ang3")->value();
-    }
-
-
-
-    Kp = Kp_text.toFloat();
-    Ki = Ki_text.toFloat();
-    Kd = Kd_text.toFloat();
-    speed = speed_text.toInt();
-    white = white_text.toInt();
-    blue = blue_text.toInt();
-    timing = timing_text.toInt();
-    tim1 = tim1_text.toInt();
-    tim3 = tim2_text.toInt();
-    tim1 = tim3_text.toInt();
-    ang1 = ang1_text.toInt();
-    ang2 = ang2_text.toInt();
-    ang3 = ang3_text.toInt();
-
-    Serial.println(String(Kp,5));
-    Serial.println(String(Ki,5));
-    Serial.println(String(Kd,5));
-
-
-int light = 0;
- sum = 0;
-for (i = 0; i < 10; i++) {
-    LigR=analogRead(34);
-    sum = sum + LigR;
-  }
-light = sum/i;
-
-String light_text = String(light);
-String right_dist,left_dist;
-
-  if (lox2.isRangeComplete()) {
-  right_dist=String(lox2.readRange());
-  }
-    
-  if (lox1.isRangeComplete()) {
-  left_dist=String(lox1.readRange());
-  }
-String count_text=String(count);
-String turn_text = String(turn);
-
-String mess = "<!DOCTYPE HTML><html><head><title>ESP Input \
-    Form</title><meta name='viewport' content='width=device-width, initial-scale=1'></head><body> \
-    Kp="+Kp_text+"  Ki="+Ki_text+"  Kd="+Kd_text+"  Light="+light_text+"  Right_dist="+right_dist+"  Left_dist="+left_dist+"  Count="+count_text+"  turn="+turn_text+" \
-    <form action='/get'> \
-    kP: <input type='text' name='Kp' value='"+Kp_text+"'><br> \
-    kI: <input type='text' name='Ki' value='"+Ki_text+"'> \
-    <br>kD: <input type='text' name='Kd' value='"+Kd_text+"'>\
-    <br>speed: <input type='text' name='speed' value='"+speed_text+"'>\
-    <br>white: <input type='text' name='white' value='"+white_text+"'>\
-    <br>blue: <input type='blue' name='blue' value='"+blue_text+"'>\
-    <br>timing: <input type='timing' name='timing' value='"+timing_text+"'>\
-    <br>tim1: <input type='tim1' name='tim1' value='"+tim1_text+"'>\
-    <br>ang1: <input type='ang1' name='ang1' value='"+ang1_text+"'>\
-    <br>tim2: <input type='tim2' name='tim2' value='"+tim2_text+"'>\
-    <br>ang2: <input type='ang2' name='ang2' value='"+ang2_text+"'>\
-    <br>tim3: <input type='tim3' name='tim3' value='"+tim3_text+"'>\
-    <br>ang3: <input type='ang3' name='ang3' value='"+ang3_text+"'>\
-    <input type='submit' value='Submit'>\
-  </form>\
-</body></html>";
-
-    request->send(200, "text/html", mess);
-  });
-  server.onNotFound(notFound);
-  server.begin();
-
-//*/  //  222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-
-
-
-
   myservo.attach(15); 
   servo1.attach(2);
   servo1.write(84);
@@ -500,7 +331,7 @@ iiiii = iiiii + 1;
 
 }
 
-void loop() {
+void loop() {  // Основной цикл программы //
 
 
 timMilis = millis();
@@ -629,7 +460,7 @@ count = count + 1;
 
 
 
-if (count == 1111){
+if (count == 11){
 servo1.write(82);
 delay(500);
   myservo.write(90);
